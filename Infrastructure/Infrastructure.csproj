@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20200716165149_AddedRequiredAndRelations.cs" />
+    <Compile Remove="Data\Migrations\20200716165149_AddedRequiredAndRelations.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 	<ItemGroup>
