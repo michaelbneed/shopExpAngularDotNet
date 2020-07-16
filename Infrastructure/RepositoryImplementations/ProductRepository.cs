@@ -18,14 +18,30 @@ namespace Infrastructure.RspositoryImplementations.Implementations
             _context = context;
         }
 
-        public async Task<Product> GetProductByIdAsync(int id)
-        {
-            return await _context.Products.FindAsync(id);
-        }
-
         public async Task<IReadOnlyList<Product>> GetProductsAsync()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+                .Include(p => p.ProductMaker)
+                .Include(p => p.ProductType)
+                .ToListAsync();
+        }
+
+        public async Task<Product> GetProductByIdAsync(int id)
+        {
+            return await _context.Products
+                .Include(p => p.ProductMaker)
+                .Include(p => p.ProductType)
+                .FirstOrDefaultAsync(p => p.Id.Equals(id));
+        }
+
+        public async Task<IReadOnlyList<ProductMaker>> GetProductMakersAsync()
+        {
+            return await _context.ProductMakers.ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<ProductType>> GetProductTypesAsync()
+        {
+            return await _context.ProductTypes.ToListAsync();
         }
     }
 }

@@ -10,5 +10,7 @@ namespace Core.Repositories.Interfaces
     {
         Task<Product> GetProductByIdAsync(int id);
         Task<IReadOnlyList<Product>> GetProductsAsync();
+        Task<IReadOnlyList<ProductMaker>> GetProductMakersAsync();
+        Task<IReadOnlyList<ProductType>> GetProductTypesAsync();
     }
 }
