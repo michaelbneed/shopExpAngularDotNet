@@ -48,6 +48,7 @@ namespace API.Controllers
         {
             var spec = new ProductsTypesMakersSpecification(id);
             var product = await _repoProduct.GetEntityWithSpec(spec);
+            
             return mapper.Map<Product, ProductDto>(product);
         }
 
