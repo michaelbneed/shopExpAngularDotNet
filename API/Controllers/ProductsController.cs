@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Core.Repositories.Interfaces;
 using Core.RepositoryInterfaces.Interfaces;
 using Core.Specification;
+using API.DTO;
 
 namespace API.Controllers
 {
@@ -29,19 +30,39 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<List<ProductDto>>> GetProducts()
         {
             var spec = new ProductsTypesMakersSpecification();
             var products = await _repoProduct.ListAsync(spec);
-            return Ok(products);
+
+            return products.Select(product => new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                PictureUrl = product.PictureUrl,
+                ProductMaker = product.ProductMaker.Name,
+                ProductType = product.ProductType.Name
+            }).ToList();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             var spec = new ProductsTypesMakersSpecification(id);
             var product = await _repoProduct.GetEntityWithSpec(spec);
-            return product;
+
+            return new ProductDto
+            {
+                Id = product.Id,
+                Name= product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                PictureUrl = product.PictureUrl,
+                ProductMaker = product.ProductMaker.Name,
+                ProductType = product.ProductType.Name
+            };
         }
 
         [HttpGet("makers")]
