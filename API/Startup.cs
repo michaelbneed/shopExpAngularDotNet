@@ -1,16 +1,13 @@
-using Core.Repositories.Interfaces;
-using Infrastructure.RspositoryImplementations.Implementations;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Core.RepositoryInterfaces.Interfaces;
-using Infrastructure.RepositoryImplementations;
 using AutoMapper;
 using API.Helpers;
+using API.Middleware;
+using API.Extensions;
 
 namespace API
 {
@@ -29,18 +26,25 @@ namespace API
         {
             services.AddControllers();
             services.AddDbContext<StoreContext>(x => x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddAutoMapper(typeof(MappingProfiles));
+            
+            // Call IServiceCollection extensions
+            services.AddAppServices();
+            services.AddSwaggerDocs();
+            
+            services.AddAutoMapper(typeof(MappingProfiles));       
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseHttpsRedirection();
 
@@ -49,6 +53,8 @@ namespace API
             app.UseStaticFiles();
 
             app.UseAuthorization();
+
+            app.UseSwaggerMiddleware();
 
             app.UseEndpoints(endpoints =>
             {

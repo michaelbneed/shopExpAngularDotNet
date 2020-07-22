@@ -11,6 +11,9 @@ using Core.RepositoryInterfaces.Interfaces;
 using Core.Specification;
 using API.DTO;
 using AutoMapper;
+using Microsoft.Extensions.FileProviders;
+using API.Errors;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
@@ -42,10 +45,16 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             var spec = new ProductsTypesMakersSpecification(id);
             var product = await _repoProduct.GetEntityWithSpec(spec);
+
+            if (product == null)
+            {
+                return NotFound(new ApiResponse(404));
+            }
             
             return mapper.Map<Product, ProductDto>(product);
         }
