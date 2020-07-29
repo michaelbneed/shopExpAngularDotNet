@@ -8,15 +8,20 @@ namespace Core.Specification
 {
     public class ProductsTypesMakersSpecification : BaseSpecification<Product>
     {
-        public ProductsTypesMakersSpecification(string sort)
+        public ProductsTypesMakersSpecification(ProductSpecParams productParams)
+            : base(x => 
+                  (!productParams.MakerId.HasValue || x.ProductMakerId == productParams.MakerId) &&
+                  (!productParams.TypeId.HasValue || x.ProductTypeId == productParams.TypeId)
+              )
         {
             AddInclude(x => x.ProductType);
             AddInclude(x => x.ProductMaker);
             AddOrderBy(x => x.Name);
+            ApplyPaging(productParams.PageSize * (productParams.PageIndex - 1), productParams.PageSize);
 
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(productParams.Sort))
             {
-                switch (sort)
+                switch (productParams.Sort)
                 {
                     case "priceAsc":
                         AddOrderBy(p => p.Price);
