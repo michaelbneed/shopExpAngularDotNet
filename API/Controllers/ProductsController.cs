@@ -14,6 +14,7 @@ using AutoMapper;
 using Microsoft.Extensions.FileProviders;
 using API.Errors;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
@@ -36,6 +37,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [EnableCors("CorsPolicy")]
         public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts([FromQuery]ProductSpecParams productParams)
         {
             var spec = new ProductsTypesMakersSpecification(productParams);
