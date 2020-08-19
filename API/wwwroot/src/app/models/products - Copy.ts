@@ -1,0 +1,12 @@
+declare module IProduct {
+
+  export interface RootObject {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    pictureUrl: string;
+    productType: string;
+    productMaker: string;
+  }
+}

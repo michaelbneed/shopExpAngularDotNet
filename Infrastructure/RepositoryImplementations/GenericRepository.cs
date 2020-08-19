@@ -21,6 +21,15 @@ namespace Infrastructure.RepositoryImplementations
             _context = context;
         }
 
+        public async Task<int> CountAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
+        }
+
+        public Task<int> CountASync(ISpecification<T> spec)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {

@@ -2,6 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from "@angular/common";
+import { IProduct } from "./models/product";
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { CommonModule } from "@angular/common";
 
 export class AppComponent implements OnInit {
   title: 'Tendencies Shopping';
-  products: any[];
+  products: IProduct[];
 
   constructor(private http: HttpClient) { }
 
